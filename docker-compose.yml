@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  spark-app:
+    image: epahomov/docker-spark:lightweighted
+    ports:
+      - "4040:4040"
+    volumes:
+      - .:/app/
+      - ./template.sh:/template.sh
+      - ./submit.sh:/submit.sh
+      - ./spark-defaults.conf:/spark/conf/spark-defaults.conf
+    # environment:
+    environment:
+      - "SPARK_MASTER_URL=spark://spark-app:7077"
+      # - SPARK_MASTER_NAME=spark-app
+      # - SPARK_MASTER_PORT=7077
+      - SPARK_APPLICATION_PYTHON_LOCATION=/app/app.py
+      - SPARK_APPLICATION_JAR_LOCATION=/app/jars/mysql-connector-java-5.1.4.jar
+    command: ["/bin/bash", "/template.sh"]
+    # command: ["/spark/bin/spark-submit", "--jars", "/app/jars/mysql-connector-java-5.1.4.jar", "/app/app.py"]
+    network_mode: "docker-hive_default"
+
